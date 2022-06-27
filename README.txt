@@ -20,11 +20,13 @@ Notes:
       downloading the preset "Headphones_pulse/easy.json" to the output folder
       Next, open the preset drop-down menu in the program and click the 2 curved arrows of the 
       preset you want to apply to the current output device. Say you've plugged in headphones, 
-      please click the 2 curved arrows behind "Headphones". Then unplug the headphones so the speakers are beign used
-      and click on the curved arrows behind the model specific preset. Now when you plug in your headphones again, 
-      the program will automatically switch to the headphone preset.
-    - There's a script available to handle the configuration automatically, but please note that this script is experimental. 
-      If you experience any issues while using this script, please contact: l.bruins@laptopwithlinux.com
+      please click the 2 curved arrows behind "Headphones". Then unplug the headphones so the speakers are 
+      being used and click on the curved arrows behind the model specific preset. Now when you plug in your 
+      headphones again, the program will automatically switch to the headphone preset.
+    - There's a script available to handle the configuration automatically, but please note that 
+      this script is experimental. If you experience any issues while using this script, 
+      please contact: l.bruins@laptopwithlinux.com
+      
       Here's how you can use the script:
       1. Clone the git repository
         git clone https://github.com/comexr/audio-presets.git
