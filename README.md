@@ -1,6 +1,6 @@
-#Audio Presets for PulseEffects or EasyEffects on CLEVO devices.
+# Audio Presets for PulseEffects or EasyEffects on CLEVO devices.
 
-##How to apply the preset:
+## How to apply the preset:
     1. Install Pulse Effects or Easy Effects on your system, depending on which sound server your operating system is using.
     2. Download the correct preset for your model laptop for the correct program.
        So if you have a Clevo NLx0MU and installed Pulse Effects you should download NLxMU_pulse.json
@@ -10,11 +10,11 @@
     4. Copy/Paste the downloaded file to: ~/.config/[PulseEffects or easyeffects]/output/
     5. The preset should now be selectable in the program
     
-##Additional configuration:
+## Additional configuration:
     1. To apply the preset by default, open the program, go to the settings in the top-right corner 
        and toggle "Start Service at Login" on
 
-##Notes:
+## Notes:
     - Please note that this preset will be applied to ALL output devices. If you connect an 
       external speaker to the laptop this might not sound optimal. This can be fixed by also 
       downloading the preset "Headphones_pulse/easy.json" to the output folder
@@ -27,7 +27,7 @@
       this script is experimental. If you experience any issues while using this script, 
       please contact: l.bruins@laptopwithlinux.com
       
-      ###Here's how you can use the script:
+      ### Here's how you can use the script:
       1. Clone the git repository
         git clone https://github.com/comexr/audio-presets.git
       2. Navigate to scripts folder
