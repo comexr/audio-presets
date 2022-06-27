@@ -89,7 +89,7 @@ echo "Created autostart file"
 
 setPresetFile() {
 	# Look for a preset file for the correct model/application and apply this instead of the default
-	folder=./presets
+	folder=../presets
 
 	# Get current model
 	model=$(sudo dmidecode | grep "Name:" | head -n 1)
@@ -142,3 +142,4 @@ fi
 echo "Installation complete!"
 echo "Please reboot your machine"
 echo "You can safely remove this folder"
+
