@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# PLEASE USE WITH CAUTION
+
 # Script for installing Pulse Effects/Easyeffects and setting default preset
 #
 # Tested on:
