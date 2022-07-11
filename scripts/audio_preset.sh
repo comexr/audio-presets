@@ -37,7 +37,7 @@ elif pamac --version &>/dev/null; then
 	pkg_mgr=pamac
 	folder_name=easyeffects
 fi
-# Independant variables
+# Independent variables
 audio_pci_id=$(lspci | grep "Audio device: Intel" | awk '{print $1}' | sed 's/:/_/')
 speaker_id=alsa_output.pci-0000_$audio_pci_id.analog-stereo\:analog-output-speaker.json
 headphones_id=alsa_output.pci-0000_$audio_pci_id.analog-stereo\:analog-output-headphones.json
@@ -48,6 +48,7 @@ installEffects() {
 		sudo $1 install "$app_type"effects manjaro-pipewire --no-confirm
 	# Workaround for Ubuntu, settings aren't properly initialized on reboot
 	# This installs a newer version of pulseeffects
+	# Keep an eye on version, once 4.8.7 is added to jammy, remove code below
 	elif [[ $XDG_CURRENT_DESKTOP == "ubuntu:GNOME" ]] ; then
 		if apt list --installed "$app_type"effects | grep pulse; then
 			echo "$app_type effects already installed, skipping"
@@ -66,7 +67,6 @@ installEffects() {
 
 createFolders() {
 	# Create folders needed later, ~/.config/autostart usually already exists
-	mkdir -p ~/.config/$1 &>/dev/null
 	mkdir -p ~/.config/$1/output &>/dev/null
 	mkdir -p ~/.config/$1/autoload &>/dev/null
 	mkdir -p ~/.config/autostart &>/dev/null
@@ -122,7 +122,7 @@ setPresetFile() {
 	echo -e "{\n\t\"name\": \"Default\"\n}" > ~/.config/$folder_name/autoload/$speaker_id
 	echo -e "{\n\t\"name\": \"Headphones\"\n}" > ~/.config/$folder_name/autoload/$headphones_id
 	# Apply preset as the default selected preset
-	#"$app_type"effects -l Default &>/dev/null || true
+	"$app_type"effects -l Default &>/dev/null || true
 }
 
 if [[ $pkg_mgr == "" ]] ; then
