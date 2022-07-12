@@ -21,10 +21,10 @@ trap 'echo "Exit $? due to: \"$previous_command\""' ERR
 if [ "$EUID" -eq 0 ]; then echo "Please run as user"; exit 1; fi
 
 # Set correct variables according to package manager
-if apt install -h &>/dev/null; then
+if apt-get install -h &>/dev/null; then
 	app_type=pulse
 	app_type_cap=Pulse
-	pkg_mgr=apt
+	pkg_mgr=apt-get
 	folder_name=PulseEffects
 elif dnf --version &>/dev/null; then
 	app_type=easy
@@ -50,7 +50,7 @@ installEffects() {
 	# This installs a newer version of pulseeffects
 	# Keep an eye on version, once 4.8.7 is added to jammy, remove code below
 	elif [[ $XDG_CURRENT_DESKTOP == "ubuntu:GNOME" ]] ; then
-		if apt list --installed "$app_type"effects | grep pulse; then
+		if apt-cache policy pulseeffects | grep -i installed; then
 			echo "$app_type effects already installed, skipping"
 		else
 			echo "deb http://nl.archive.ubuntu.com/ubuntu/ kinetic main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
