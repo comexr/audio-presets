@@ -38,6 +38,7 @@ elif pamac --version &>/dev/null; then
 	folder_name=easyeffects
 fi
 # Independent variables
+# TODO: find audio pci id of AMD devices
 audio_pci_id=$(lspci | grep "Audio device: Intel" | awk '{print $1}' | sed 's/:/_/')
 speaker_id=alsa_output.pci-0000_$audio_pci_id.analog-stereo\:analog-output-speaker.json
 headphones_id=alsa_output.pci-0000_$audio_pci_id.analog-stereo\:analog-output-headphones.json
@@ -45,37 +46,45 @@ headphones_id=alsa_output.pci-0000_$audio_pci_id.analog-stereo\:analog-output-he
 installEffects() {
 	# Catch for Manjaro, needs additional package
 	if [[ $pkg_mgr == "pamac" ]] ; then 
-		sudo $1 install "$app_type"effects manjaro-pipewire --no-confirm
+		echo "Installing extra packages..."
+		sudo $1 install "$app_type"effects manjaro-pipewire --no-confirm &>/dev/null
 	# Workaround for Ubuntu, settings aren't properly initialized on reboot
 	# This installs a newer version of pulseeffects
 	# Keep an eye on version, once 4.8.7 is added to jammy, remove code below
 	elif [[ $XDG_CURRENT_DESKTOP == "ubuntu:GNOME" ]] ; then
-		if apt-cache policy pulseeffects | grep -i installed; then
+		if apt-cache policy pulseeffects | grep -i installed &>/dev/null; then
 			echo "$app_type effects already installed, skipping"
 		else
 			echo "deb http://nl.archive.ubuntu.com/ubuntu/ kinetic main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-			sudo $1 update
-			sudo $1 install "$app_type"effects -y
+			echo "Updating package lists..."
+			sudo $1 update &>/dev/null
+			echo "Installing pulseeffects..."
+			sudo $1 install "$app_type"effects -y &>/dev/null
 			sudo sed '$d' /etc/apt/sources.list | sudo tee /etc/apt/sources.list.temp && sudo mv /etc/apt/sources.list.temp /etc/apt/sources.list
 		fi
 	# Normal case install method
 	else 
-		sudo $1 install "$app_type"effects -y
+		echo "Installing pulseeffets..."
+		sudo $1 install "$app_type"effects -y &>/dev/null
 	fi
 	echo "$folder_name installed"
 }
 
 createFolders() {
 	# Create folders needed later, ~/.config/autostart usually already exists
+	echo "Creating ~/.config/$1/output"
 	mkdir -p ~/.config/$1/output &>/dev/null
+	echo "Creating ~/.config/$1/autoload"
 	mkdir -p ~/.config/$1/autoload &>/dev/null
+	echo "Creating ~/.config/autostart"
 	mkdir -p ~/.config/autostart &>/dev/null
-	echo "Created config folders"
+	echo "Succesfully created config folders"
 }
 
 createAutostart() {
 # Create an autostart entry to automatically apply the preset on log-in
 ### Not indented because of EOF rules
+echo "Creating autostart file..."
 cat <<EOF > ~/.config/autostart/"$2"effects-service.desktop
 [Desktop Entry]
 Name=$1Effects
@@ -98,10 +107,11 @@ setPresetFile() {
 	model=${model#*Name: }
 
 	# Loop through the presets folder
+	echo "Looping through $folder..."
 	for file in $folder/*
 	do
 		# Check if the model + application combination exist
-		if [ $file = $folder/$model\_$app_type.json ] ; then
+		if [ $file = $folder/"$model"\_$app_type.json ] ; then
 			echo "Found specific preset for model"
 			echo "Applying"
 			# Set preset file to the file found
@@ -115,12 +125,12 @@ setPresetFile() {
 	# Copy preset file to preset folder in the pulse/easy effects config folder
 	sudo cp $preset_file ~/.config/$folder_name/output/Default.json && echo "Copied $preset_file to ~/.config/$folder_name/output/Default.json"
 	# Set Headphones_TYPE.json (empty config) as default for 3.5mm
-	sudo cp $folder/Headphones_$app_type.json ~/.config/$folder_name/output/Headphones.json
+	sudo cp $folder/Headphones_$app_type.json ~/.config/$folder_name/output/Headphones.json && echo "Copied Headphones_$app_type.json to ~/.config/$folder_name/output/"
 	# Set rights to user
-	sudo chown $USER ~/.config/$folder_name/output/*.json
+	sudo chown $USER ~/.config/$folder_name/output/*.json && echo "Set ownership of preset files"
 	# Set Default as default for speakers and Headphones as default for the 3.5mm jack
-	echo -e "{\n\t\"name\": \"Default\"\n}" > ~/.config/$folder_name/autoload/$speaker_id
-	echo -e "{\n\t\"name\": \"Headphones\"\n}" > ~/.config/$folder_name/autoload/$headphones_id
+	echo -e "{\n\t\"name\": \"Default\"\n}" > ~/.config/$folder_name/autoload/$speaker_id && echo "Set autoload preset Default"
+	echo -e "{\n\t\"name\": \"Headphones\"\n}" > ~/.config/$folder_name/autoload/$headphones_id && echo "Set autoload preset Headphones"
 	# Apply preset as the default selected preset
 	"$app_type"effects -l Default &>/dev/null || true
 }
@@ -141,7 +151,7 @@ else
 	createAutostart $app_type_cap $app_type
 fi
 
-echo "Installation complete!"
+echo -e "\nInstallation complete!"
 echo "Please reboot your machine"
 echo "You can safely remove this folder"
 
