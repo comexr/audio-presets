@@ -12,6 +12,9 @@
 #	-Zorin
 set -e
 
+# Ask for password for future permissions
+sudo -v
+
 # Automatically exit script on non-zero exit codes
 # Report the command that failed
 trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
