@@ -28,7 +28,7 @@
   headphones again, the program will automatically switch to the headphone preset.
 - There's a script available to handle the configuration automatically, but please note that 
   this script is experimental. If you experience any issues while using this script, 
-  please contact: l.bruins@laptopwithlinux.com
+  please contact: support@laptopwithlinux.com
       
  ## Here's how you can use the script:
  1. Clone the git repository
